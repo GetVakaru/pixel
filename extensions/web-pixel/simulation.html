@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vakaru Demo Store - Pixel Tracking Simulation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 2rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .cart-icon {
+            background: #e74c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cart-icon:hover {
+            background: #c0392b;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: #e74c3c;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #c0392b;
+        }
+
+        .products-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background: #229954;
+        }
+
+        .newsletter {
+            background: #34495e;
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .newsletter h2 {
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-form {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .newsletter-form button {
+            background: #e74c3c;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .demo-notice {
+            background: #3498db;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            color: #27ae60;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-notice">
+        VAKARU PIXEL DEMO - Watch the tracking panel appear and capture all your interactions!
+    </div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">VakaruStore</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products..." id="search-input">
+            </div>
+            <div class="cart-icon" onclick="openCart()">
+                Cart (<span id="cart-count">0</span>)
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Experience Next-Level Analytics</h1>
+            <p>Every click, scroll, and interaction is being tracked in real-time</p>
+            <button class="cta-button" onclick="scrollToProducts()">Shop Now</button>
+        </section>
+
+        <section class="products-section" id="products">
+            <h2 class="section-title">Featured Products</h2>
+            <div class="products-grid">
+                <div class="product-card" data-product-id="prod-001" onclick="viewProduct('Premium Headphones', '$199.99')">
+                    <div class="product-image">Premium Audio</div>
+                    <div class="product-info">
+                        <div class="product-title">Premium Wireless Headphones</div>
+                        <div class="product-price">$199.99</div>
+                        <button class="add-to-cart" onclick="addToCart(event, 'Premium Headphones', 199.99)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="prod-002" onclick="viewProduct('Smart Watch', '$299.99')">
+                    <div class="product-image">Smart Tech</div>
+                    <div class="product-info">
+                        <div class="product-title">Smart Fitness Watch</div>
+                        <div class="product-price">$299.99</div>
+                        <button class="add-to-cart" onclick="addToCart(event, 'Smart Watch', 299.99)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="prod-003" onclick="viewProduct('Laptop Stand', '$89.99')">
+                    <div class="product-image">Ergonomic</div>
+                    <div class="product-info">
+                        <div class="product-title">Adjustable Laptop Stand</div>
+                        <div class="product-price">$89.99</div>
+                        <button class="add-to-cart" onclick="addToCart(event, 'Laptop Stand', 89.99)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="prod-004" onclick="viewProduct('Phone Case', '$24.99')">
+                    <div class="product-image">Protection</div>
+                    <div class="product-info">
+                        <div class="product-title">Protective Phone Case</div>
+                        <div class="product-price">$24.99</div>
+                        <button class="add-to-cart" onclick="addToCart(event, 'Phone Case', 24.99)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="prod-005" onclick="viewProduct('Desk Lamp', '$79.99')">
+                    <div class="product-image">Lighting</div>
+                    <div class="product-info">
+                        <div class="product-title">LED Desk Lamp</div>
+                        <div class="product-price">$79.99</div>
+                        <button class="add-to-cart" onclick="addToCart(event, 'Desk Lamp', 79.99)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="prod-006" onclick="viewProduct('Coffee Mug', '$15.99')">
+                    <div class="product-image">Kitchen</div>
+                    <div class="product-info">
+                        <div class="product-title">Insulated Coffee Mug</div>
+                        <div class="product-price">$15.99</div>
+                        <button class="add-to-cart" onclick="addToCart(event, 'Coffee Mug', 15.99)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <h2>Stay Updated</h2>
+            <p>Get the latest products and exclusive offers</p>
+            <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                <input type="email" placeholder="Enter your email" required id="newsletter-email">
+                <button type="submit">Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 VakaruStore - Demo Site for Pixel Tracking</p>
+        <p>This is a simulation. Real tracking data would be sent to your analytics platform.</p>
+    </footer>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCart()">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cart-items">Your cart is empty</div>
+            <div style="margin-top: 1rem;">
+                <button class="cta-button" onclick="startCheckout()">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = 'sim_sess_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        let userId = 'sim_user_' + Math.random().toString(36).substr(2, 9);
+        let eventBuffer = [];
+        let clickHeatmap = [];
+        let eventStats = {
+            totalEvents: 0,
+            sessionStart: Date.now(),
+            eventCounts: {}
+        };
+        let cartItems = [];
+        let cartCount = 0;
+
+        initializeDemoInterface();
+        initializeHeatmap();
+        initializeEventAnimations();
+
+        trackEvent('page_viewed', {
+            title: document.title,
+            url: window.location.href,
+            referrer: document.referrer,
+            timestamp: Date.now()
+        });
+
+        document.addEventListener('click', handleClick);
+        document.addEventListener('scroll', handleScroll);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.getElementById('search-input').addEventListener('input', handleSearch);
+        document.getElementById('newsletter-email').addEventListener('input', handleFormInput);
+
+        let lastMouseTrack = 0;
+        let lastScrollPosition = 0;
+
+        function trackEvent(eventType, data) {
+            const eventData = {
+                sessionId,
+                userId,
+                timestamp: Date.now(),
+                eventType,
+                data,
+                url: window.location.href,
+                userAgent: navigator.userAgent
+            };
+
+            eventBuffer.push(eventData);
+            eventStats.totalEvents++;
+            eventStats.eventCounts[eventType] = (eventStats.eventCounts[eventType] || 0) + 1;
+
+            displayEventInDemo(eventData);
+            updateDemoStats();
+
+            console.log(`Event Tracked: ${eventType}`, eventData);
+
+            if (eventBuffer.length >= 10) {
+                flushEventBuffer();
+            }
+        }
+
+        function handleClick(event) {
+            if (event.target.closest('#vakaru-demo-panel')) return;
+
+            const target = event.target;
+            trackEvent('click_event', {
+                tagName: target.tagName,
+                className: target.className,
+                id: target.id,
+                text: target.textContent?.substring(0, 100),
+                x: event.clientX,
+                y: event.clientY,
+                timestamp: Date.now()
+            });
+
+            addToHeatmap(event.clientX, event.clientY);
+            showClickAnimation(event.clientX, event.clientY);
+        }
+
+        function handleScroll() {
+            const scrollPosition = window.scrollY;
+            const scrollPercentage = Math.round((scrollPosition / (document.body.scrollHeight - window.innerHeight)) * 100);
+
+            if (Math.abs(scrollPosition - lastScrollPosition) > 100) {
+                trackEvent('scroll_event', {
+                    position: scrollPosition,
+                    percentage: scrollPercentage,
+                    direction: scrollPosition > lastScrollPosition ? 'down' : 'up',
+                    timestamp: Date.now()
+                });
+                lastScrollPosition = scrollPosition;
+                showScrollIndicator(scrollPercentage);
+            }
+        }
+
+        function handleMouseMove(event) {
+            const now = Date.now();
+            if (now - lastMouseTrack > 2000) {
+                trackEvent('mouse_movement', {
+                    x: event.clientX,
+                    y: event.clientY,
+                    timestamp: now
+                });
+                lastMouseTrack = now;
+            }
+        }
+
+        function handleSearch(event) {
+            const query = event.target.value;
+            if (query.length > 2) {
+                trackEvent('search_submitted', {
+                    searchTerm: query,
+                    resultsCount: Math.floor(Math.random() * 20) + 1,
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        function handleFormInput(event) {
+            trackEvent('form_interaction', {
+                fieldType: event.target.type,
+                fieldName: event.target.name || 'newsletter-email',
+                fieldId: event.target.id,
+                hasValue: event.target.value.length > 0,
+                timestamp: Date.now()
+            });
+            showFormInteractionIndicator(event.target);
+        }
+
+        function viewProduct(title, price) {
+            trackEvent('product_viewed', {
+                productTitle: title,
+                price: price,
+                productType: 'electronics',
+                vendor: 'VakaruStore',
+                timestamp: Date.now()
+            });
+        }
+
+        function addToCart(event, title, price) {
+            event.stopPropagation();
+
+            cartItems.push({ title, price });
+            cartCount++;
+            document.getElementById('cart-count').textContent = cartCount;
+
+            trackEvent('product_added_to_cart', {
+                productTitle: title,
+                quantity: 1,
+                price: price,
+                timestamp: Date.now()
+            });
+
+            event.target.style.background = '#27ae60';
+            event.target.textContent = 'Added!';
+            setTimeout(() => {
+                event.target.style.background = '#229954';
+                event.target.textContent = 'Add to Cart';
+            }, 1000);
+        }
+
+        function scrollToProducts() {
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openCart() {
+            document.getElementById('cart-modal').style.display = 'block';
+            updateCartDisplay();
+        }
+
+        function closeCart() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function updateCartDisplay() {
+            const cartItemsEl = document.getElementById('cart-items');
+            if (cartItems.length === 0) {
+                cartItemsEl.innerHTML = 'Your cart is empty';
+            } else {
+                cartItemsEl.innerHTML = cartItems.map(item =>
+                    `<div style="margin: 0.5rem 0;">${item.title} - ${item.price}</div>`
+                ).join('');
+            }
+        }
+
+        function startCheckout() {
+            if (cartItems.length === 0) return;
+
+            const total = cartItems.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '')), 0);
+
+            trackEvent('checkout_started', {
+                totalPrice: total,
+                currency: 'USD',
+                lineItemsCount: cartItems.length,
+                timestamp: Date.now()
+            });
+
+            setTimeout(() => {
+                trackEvent('payment_info_submitted', {
+                    timestamp: Date.now()
+                });
+            }, 2000);
+
+            setTimeout(() => {
+                trackEvent('checkout_completed', {
+                    orderId: 'order_' + Math.random().toString(36).substr(2, 9),
+                    totalPrice: total,
+                    currency: 'USD',
+                    timestamp: Date.now()
+                });
+                alert('Demo checkout completed! Check the tracking panel for events.');
+                closeCart();
+            }, 4000);
+
+            alert('Starting demo checkout process... Watch the tracking panel!');
+        }
+
+        function subscribeNewsletter(event) {
+            event.preventDefault();
+            trackEvent('form_interaction', {
+                fieldType: 'email',
+                fieldName: 'newsletter',
+                action: 'submit',
+                timestamp: Date.now()
+            });
+            alert('Newsletter subscription tracked!');
+        }
+
+        setTimeout(() => {
+            if (Math.random() > 0.5) {
+                window.scrollTo({ top: 300, behavior: 'smooth' });
+            }
+        }, 3000);
+
+        function initializeDemoInterface() {
+            const demoPanel = document.createElement('div');
+            demoPanel.id = 'vakaru-demo-panel';
+            demoPanel.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                width: 350px;
+                max-height: 500px;
+                background: rgba(0, 0, 0, 0.95);
+                color: white;
+                padding: 15px;
+                border-radius: 12px;
+                font-family: 'Monaco', 'Menlo', monospace;
+                font-size: 11px;
+                z-index: 10000;
+                overflow-y: auto;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+                border: 2px solid #00ff00;
+                backdrop-filter: blur(10px);
+            `;
+
+            demoPanel.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 10px; color: #00ff00; font-size: 13px;">
+                    Vakaru Event Tracker
+                </div>
+                <div style="font-size: 9px; margin-bottom: 15px; color: #ccc; line-height: 1.3;">
+                    Session: ${sessionId.substring(0, 20)}...<br>
+                    User: ${userId}
+                </div>
+
+                <div id="vakaru-demo-controls" style="margin-bottom: 15px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button onclick="togglePause(this)" style="padding: 4px 8px; background: #ff6b35; border: none; border-radius: 4px; color: white; font-size: 9px; cursor: pointer;">Pause</button>
+                    <button onclick="clearEvents()" style="padding: 4px 8px; background: #6c5ce7; border: none; border-radius: 4px; color: white; font-size: 9px; cursor: pointer;">Clear</button>
+                    <button onclick="toggleHeatmap()" style="padding: 4px 8px; background: #fd79a8; border: none; border-radius: 4px; color: white; font-size: 9px; cursor: pointer;">Heatmap</button>
+                    <button onclick="exportData()" style="padding: 4px 8px; background: #00b894; border: none; border-radius: 4px; color: white; font-size: 9px; cursor: pointer;">Export</button>
+                </div>
+
+                <div id="vakaru-stats" style="margin-bottom: 15px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; font-size: 9px;">
+                    <div style="color: #00ff00; font-weight: bold; margin-bottom: 4px;">Session Stats</div>
+                    <div id="vakaru-stats-content">Loading...</div>
+                </div>
+
+                <div id="vakaru-event-list" style="max-height: 250px; overflow-y: auto;">
+                    <div style="color: #888;">Waiting for events...</div>
+                </div>
+            `;
+
+            document.body.appendChild(demoPanel);
+            makeDraggable(demoPanel);
+        }
+
+        function makeDraggable(element) {
+            let isDragging = false;
+            let dragOffset = { x: 0, y: 0 };
+
+            element.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                isDragging = true;
+                dragOffset.x = e.clientX - element.offsetLeft;
+                dragOffset.y = e.clientY - element.offsetTop;
+                element.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    element.style.left = (e.clientX - dragOffset.x) + 'px';
+                    element.style.top = (e.clientY - dragOffset.y) + 'px';
+                    element.style.right = 'auto';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                element.style.cursor = 'grab';
+            });
+        }
+
+        let isPaused = false;
+        let isHeatmapVisible = false;
+
+        function togglePause(btn) {
+            isPaused = !isPaused;
+            btn.innerHTML = isPaused ? 'Resume' : 'Pause';
+            btn.style.background = isPaused ? '#00b894' : '#ff6b35';
+            window.vakaruPaused = isPaused;
+        }
+
+        function clearEvents() {
+            const eventList = document.getElementById('vakaru-event-list');
+            if (eventList) {
+                eventList.innerHTML = '<div style="color: #888;">Events cleared...</div>';
+            }
+            eventStats = {
+                totalEvents: 0,
+                sessionStart: Date.now(),
+                eventCounts: {}
+            };
+            updateDemoStats();
+        }
+
+        function toggleHeatmap() {
+            isHeatmapVisible = !isHeatmapVisible;
+            const canvas = document.getElementById('vakaru-heatmap');
+            if (canvas) {
+                canvas.style.opacity = isHeatmapVisible ? '1' : '0';
+            }
+        }
+
+        function exportData() {
+            const exportData = {
+                session: {
+                    sessionId,
+                    userId,
+                    startTime: eventStats.sessionStart,
+                    duration: Date.now() - eventStats.sessionStart,
+                    totalEvents: eventStats.totalEvents,
+                    eventCounts: eventStats.eventCounts
+                },
+                events: eventBuffer,
+                heatmap: clickHeatmap
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `vakaru-simulation-${sessionId}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function displayEventInDemo(eventData) {
+            if (window.vakaruPaused) return;
+
+            const eventList = document.getElementById('vakaru-event-list');
+            if (!eventList) return;
+
+            if (eventList.innerHTML.includes('Waiting for events') || eventList.innerHTML.includes('Events cleared')) {
+                eventList.innerHTML = '';
+            }
+
+            const eventDiv = document.createElement('div');
+            eventDiv.style.cssText = `
+                margin-bottom: 6px;
+                padding: 6px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                border-left: 3px solid ${getEventColor(eventData.eventType)};
+                animation: slideIn 0.3s ease-out;
+                font-size: 10px;
+            `;
+
+            const timeStr = new Date(eventData.timestamp).toLocaleTimeString();
+
+            eventDiv.innerHTML = `
+                <div style="font-weight: bold; color: ${getEventColor(eventData.eventType)};">
+                    ${eventData.eventType}
+                </div>
+                <div style="font-size: 8px; color: #ccc; margin-top: 2px;">
+                    ${timeStr}
+                </div>
+                <div style="font-size: 8px; color: #fff; margin-top: 3px; line-height: 1.2;">
+                    ${formatEventDataForDisplay(eventData.data)}
+                </div>
+            `;
+
+            eventList.insertBefore(eventDiv, eventList.firstChild);
+
+            while (eventList.children.length > 30) {
+                eventList.removeChild(eventList.lastChild);
+            }
+        }
+
+        function getEventColor(eventType) {
+            const colorMap = {
+                'page_viewed': '#74b9ff',
+                'product_viewed': '#fd79a8',
+                'product_added_to_cart': '#00b894',
+                'search_submitted': '#fdcb6e',
+                'checkout_started': '#6c5ce7',
+                'checkout_completed': '#00b894',
+                'click_event': '#ff7675',
+                'scroll_event': '#a29bfe',
+                'mouse_movement': '#fd79a8',
+                'form_interaction': '#55a3ff',
+                'payment_info_submitted': '#e84393'
+            };
+            return colorMap[eventType] || '#00ff00';
+        }
+
+        function updateDemoStats() {
+            const statsContent = document.getElementById('vakaru-stats-content');
+            if (!statsContent) return;
+
+            const sessionDuration = Math.round((Date.now() - eventStats.sessionStart) / 1000);
+            const topEvents = Object.entries(eventStats.eventCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 3);
+
+            statsContent.innerHTML = `
+                <div>Total Events: <span style="color: #00ff00;">${eventStats.totalEvents}</span></div>
+                <div>Session Duration: <span style="color: #74b9ff;">${sessionDuration}s</span></div>
+                <div>Buffer Size: <span style="color: #fdcb6e;">${eventBuffer.length}</span></div>
+                ${topEvents.length > 0 ? '<div style="margin-top: 4px; font-size: 8px;">Top Events:</div>' : ''}
+                ${topEvents.map(([event, count]) =>
+                    `<div style="font-size: 8px; color: #ddd;">• ${event}: ${count}</div>`
+                ).join('')}
+            `;
+        }
+
+        function formatEventDataForDisplay(data) {
+            if (typeof data !== 'object') return String(data);
+
+            const relevantFields = ['productTitle', 'searchTerm', 'tagName', 'text', 'timeOnPage', 'percentage', 'fieldType', 'direction'];
+            const displayData = {};
+
+            relevantFields.forEach(field => {
+                if (data[field] !== undefined) {
+                    displayData[field] = data[field];
+                }
+            });
+
+            return Object.keys(displayData).length > 0
+                ? JSON.stringify(displayData, null, 2).substring(0, 80) + (JSON.stringify(displayData).length > 80 ? '...' : '')
+                : 'Event captured';
+        }
+
+        function flushEventBuffer() {
+            if (eventBuffer.length === 0) return;
+            console.log(`Flushing ${eventBuffer.length} events to stream`, [...eventBuffer]);
+            eventBuffer = [];
+        }
+
+        function initializeHeatmap() {
+            const heatmapCanvas = document.createElement('canvas');
+            heatmapCanvas.id = 'vakaru-heatmap';
+            heatmapCanvas.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                pointer-events: none;
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            document.body.appendChild(heatmapCanvas);
+
+            heatmapCanvas.width = window.innerWidth;
+            heatmapCanvas.height = window.innerHeight;
+        }
+
+        function initializeEventAnimations() {
+            if (!document.getElementById('vakaru-animations')) {
+                const style = document.createElement('style');
+                style.id = 'vakaru-animations';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { opacity: 0; transform: translateX(100%); }
+                        to { opacity: 1; transform: translateX(0); }
+                    }
+
+                    @keyframes clickPulse {
+                        0% { transform: scale(0); opacity: 1; }
+                        100% { transform: scale(1); opacity: 0; }
+                    }
+
+                    @keyframes formGlow {
+                        0% { box-shadow: 0 0 5px #00ff00; }
+                        50% { box-shadow: 0 0 20px #00ff00; }
+                        100% { box-shadow: 0 0 5px #00ff00; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        function showClickAnimation(x, y) {
+            const clickIndicator = document.createElement('div');
+            clickIndicator.style.cssText = `
+                position: fixed;
+                left: ${x - 15}px;
+                top: ${y - 15}px;
+                width: 30px;
+                height: 30px;
+                border: 2px solid #ff6b6b;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 10001;
+                animation: clickPulse 0.6s ease-out;
+            `;
+
+            document.body.appendChild(clickIndicator);
+
+            setTimeout(() => {
+                clickIndicator.remove();
+            }, 600);
+        }
+
+        function showScrollIndicator(percentage) {
+            let indicator = document.getElementById('vakaru-scroll-indicator');
+
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'vakaru-scroll-indicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 4px;
+                    height: 200px;
+                    background: rgba(0, 255, 0, 0.3);
+                    border-radius: 2px;
+                    z-index: 9998;
+                `;
+                document.body.appendChild(indicator);
+            }
+
+            const progress = document.createElement('div');
+            progress.style.cssText = `
+                width: 100%;
+                height: ${Math.min(percentage, 100)}%;
+                background: #00ff00;
+                border-radius: 2px;
+                transition: height 0.3s ease;
+            `;
+
+            indicator.innerHTML = '';
+            indicator.appendChild(progress);
+        }
+
+        function showFormInteractionIndicator(element) {
+            element.style.animation = 'formGlow 1s ease-in-out';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 1000);
+        }
+
+        function addToHeatmap(x, y) {
+            clickHeatmap.push({ x, y, timestamp: Date.now() });
+
+            if (clickHeatmap.length > 50) {
+                clickHeatmap = clickHeatmap.slice(-50);
+            }
+
+            updateHeatmapVisualization();
+        }
+
+        function updateHeatmapVisualization() {
+            const canvas = document.getElementById('vakaru-heatmap');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            clickHeatmap.forEach((point) => {
+                const age = Date.now() - point.timestamp;
+                const maxAge = 60000;
+                const opacity = Math.max(0, 1 - (age / maxAge));
+
+                if (opacity > 0) {
+                    const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, 30);
+                    gradient.addColorStop(0, `rgba(255, 0, 0, ${opacity * 0.6})`);
+                    gradient.addColorStop(0.5, `rgba(255, 100, 0, ${opacity * 0.3})`);
+                    gradient.addColorStop(1, `rgba(255, 0, 0, 0)`);
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 30, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            });
+        }
+
+        setInterval(flushEventBuffer, 5000);
+    </script>
+</body>
+</html>
