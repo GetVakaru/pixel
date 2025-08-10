@@ -3,7 +3,7 @@
 client_id = "d31d1d04c0950c9bc8ba36aa312dd748"
 name = "pixel"
 handle = "pixel-155"
-application_url = "https://geology-acre-img-threshold.trycloudflare.com"
+application_url = "https://shipments-uc-qualifications-experiencing.trycloudflare.com"
 embedded = true
 
 [build]
@@ -26,7 +26,7 @@ api_version = "2025-07"
 scopes = "write_products"
 
 [auth]
-redirect_urls = ["https://geology-acre-img-threshold.trycloudflare.com/auth/callback", "https://geology-acre-img-threshold.trycloudflare.com/auth/shopify/callback", "https://geology-acre-img-threshold.trycloudflare.com/api/auth/callback"]
+redirect_urls = ["https://shipments-uc-qualifications-experiencing.trycloudflare.com/auth/callback", "https://shipments-uc-qualifications-experiencing.trycloudflare.com/auth/shopify/callback", "https://shipments-uc-qualifications-experiencing.trycloudflare.com/api/auth/callback"]
 
 [pos]
 embedded = false
